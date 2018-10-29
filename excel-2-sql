@@ -1,0 +1,142 @@
+#!/usr/bin/env node
+'use strict';
+
+const program = require('commander');
+const excelToJson = require('convert-excel-to-json');
+
+
+function filterSheetRows(row, filter) {
+    if (typeof(filter)!=='string') {
+        return true;
+    }
+    let res = filter.match(/([^>=<]+)([><=]{1})(.*)/i);
+    if (typeof(row[res[1]])===undefined) {
+        return false;
+    }
+    switch (res[2]) {
+        case '>':
+            if (row[res[1]]>res[3])
+                return true;
+            break;
+        case '<':
+            if (row[res[1]]<res[3])
+                return true;
+            break;
+
+    }
+    return false;
+}
+
+let parseFunction = (file, table, options) => {
+    if (typeof(options)==='undefined') {
+        options = [];
+    }
+
+    console.log('-- Working with ', file);
+    const result = excelToJson({
+        sourceFile: file,
+        header: {
+            rows: 1
+        },
+        columnToKey: {
+            '*': '{{columnHeader}}'
+        }
+    });
+
+
+    let sheets = Object.keys(result);
+    let firstSheet = result[sheets[0]];
+
+
+    if (typeof(options.example)!=='undefined') {
+        console.warn(firstSheet);
+        return;
+    }
+
+    let updateColumns = processColumnsToUpdate(options.column);
+
+
+    let sqlMethod = 'INSERT INTO ';
+    if (options.method==='update')
+        sqlMethod = 'UPDATE';
+    else if(options.method==='replace')
+        sqlMethod = 'REPLACE INTO ';
+
+    for (let i = 0; i <firstSheet.length; i++) {
+        let row = firstSheet[i];
+
+        if (!filterSheetRows(row, options.filter)) {
+            continue;
+        }
+
+        let columnForWhere = options.where;
+
+        let updateColumnValues = [];
+
+        // Use all columns if none are defined
+        if (updateColumns.length===0) {
+            updateColumns = Object.keys(row);
+            updateColumns.forEach(function (v, k, m) {
+               m[k] = {
+                   'name': v,
+                   'value': v
+               };
+            });
+        }
+
+
+        for (let j = 0; j < updateColumns.length; j++) {
+            if (typeof(row[updateColumns[j].value])==='undefined') {
+                console.warn(updateColumns[j].value+' is not defined on row '+i);
+            }
+            updateColumnValues.push(updateColumns[j].name+'=\''+row[updateColumns[j].value]+'\'');
+        }
+
+        let sql = sqlMethod+' '+table+' SET '+updateColumnValues.join(',');
+        if (typeof(columnForWhere)!=='undefined')
+            sql+=' WHERE '+columnForWhere+'=\''+row[columnForWhere]+'\'';
+        sql+=';';
+        console.info(sql);
+
+    }
+
+}
+
+let processColumnsToUpdate = (str) => {
+    let columns = [];
+    if (typeof(str)=='undefined') {
+        return columns;
+    }
+    if (str.indexOf(',')<0) {
+        columns.push({
+            'name': str,
+            'value': str
+        });
+        return columns;
+    }
+
+    let columnNames = str.split(',');
+    for (let i in columnNames) {
+        let columnName = columnNames[i];
+        columns.push({
+            'name': columnName,
+            'value': columnName
+        });
+    }
+    return columns;
+}
+
+program
+    .version('0.0.1')
+    .usage('[options] <file> <table>')
+    .option('-e|--example', 'Show example data')
+    .option('-m|--method <method>','Method for sql, valid options: insert, update, replace')
+    .option('-c|--column <column>','Column to insert/update')
+    .option('-w|--where <column>','Column for where')
+    .option('-f|--filter <column>','Column to apply a filter for')
+    .action(parseFunction);
+program.parse(process.argv); // end with parse to parse through the input
+
+// if program was called with no arguments, show help.
+if (program.args.length === 0) program.help();
+
