@@ -17,4 +17,4 @@ deploy:
     - build/excel-2-sql-win.exe
   skip_cleanup: true
   on:
-    repo: erickr/excel-2-sql
+    tags: true
