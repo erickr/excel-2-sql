@@ -1,0 +1,6 @@
+-- Working with  example.xlsx
+INSERT INTO  example SET id='1',firstname='jane',lastname='doe',department='it',age='32';
+INSERT INTO  example SET id='2',firstname='john',lastname='doe',department='marketing',age='30';
+INSERT INTO  example SET id='3',firstname='foo',lastname='bar',department='marketing',age='31';
+INSERT INTO  example SET id='4',firstname='john',lastname='smith',department='finance',age='40';
+INSERT INTO  example SET id='5',firstname='jane',lastname='smith',department='finance',age='40';
