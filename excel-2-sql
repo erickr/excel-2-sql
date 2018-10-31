@@ -3,6 +3,7 @@
 
 const program = require("commander");
 const excelToJson = require("convert-excel-to-json");
+const fs = require("fs");
 
 function filterSheetRows(row, filter) {
   if (typeof filter !== "string") {
@@ -24,6 +25,20 @@ function filterSheetRows(row, filter) {
 }
 
 let parseFunction = (file, table, options) => {
+
+
+  if (typeof(file)!=='string') {
+    console.warn('No file specified');
+    program.help();
+    return;
+  }
+
+  if (typeof(table)!=='string') {
+      console.log('No target table specified');
+      program.help();
+      return;
+  }
+
   if (typeof options === "undefined") {
     options = [];
   }
