@@ -1,11 +1,20 @@
 language: node_js
 node_js:
-  - "8"
-  - "lts/*"
-
+- '8'
+- lts/*
 after_success:
-  - npm install -g pkg
-  - mkdir build
-  - bin/build.sh
-  - build/excel-2-sql-linux ../example.xlsx example
-
+- npm install -g pkg
+- mkdir build
+- bin/build.sh
+- build/excel-2-sql-linux ../example.xlsx example
+deploy:
+  provider: releases
+  api_key:
+    secure: $GITHUB_TOKEN
+  file:
+    - build/excel-2-sql-linux
+    - build/excel-2-sql-macos
+    - build/excel-2-sql-win.exe
+  skip_cleanup: true
+  on:
+    repo: erickr/excel-2-sql
