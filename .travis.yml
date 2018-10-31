@@ -10,11 +10,11 @@ after_success:
 deploy:
   provider: releases
   api_key:
-    secure: $GITHUB_TOKEN
+    secure: MplR+YSjK+3R5FY8GOisTB6VdvitM6oexNFOso2xvIBOwvweCDr1uWH/IDDoAGRkRZ/szkAVRUkk1KR6U7Stzq/FZv0MUgpFd3DVcJ/pZpRqIwDvaiFFajZOYLqoP2UKA4DKomDcasO7moQJbzEiJe46m817LMUw2t2cq2R2jZS5wFNGVx1efdyglOIoE+I38TwN7zQ3Rwq3KbzF5o2KmuPp8+qKflpCtXBVYFvz+Gk1ys8PgqLNaXif07B7fkdz9tiPSpz6K/ni+lXvzukzLhjV4A2CcLM6jrx4Eub5TYl0GWqAwvmAOanKjyQy2U1dQEdKI30eUTkH/+djFPAZUv9rJX6/i9OqKt0Nu9EHOERecyIEz2wtaL3guw9H11WuzUnQunvRj1UHdA/7W+C8vS7Yo5+2v7jyen3ZMat3VBje/rhZzqL4/lKroyM5j04+4KMLZMcaVNUeTFIGp/K/z3nXoIU1cFKidw+/tce2syL3Ecz62OmrP68mvyVGC1zMo1BgiHFwk35imVc3Wf5HqrF2BhYqZ/NRu70jWbFzZRgnP57o4cidfLwTvT8eC+onZ0TV4h5o1kfHrM9UGEnkZgiRBGQKwSI5gXgda0gIXBuBplr6ueknjmQzy9bohI05WulxdNXtI9XMf+urNqfxTkxBk+5YaUwKzf1RnpdPOIQ=
   file:
-    - build/excel-2-sql-linux
-    - build/excel-2-sql-macos
-    - build/excel-2-sql-win.exe
+  - build/excel-2-sql-linux
+  - build/excel-2-sql-macos
+  - build/excel-2-sql-win.exe
   skip_cleanup: true
   on:
     tags: true
