@@ -9,8 +9,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "commander": "^2.19.0",
-    "convert-excel-to-json": "^1.4.1",
+    "commander": "^2.20.0",
+    "convert-excel-to-json": "^1.6.1",
     "excel-parser": "^0.2.2"
   },
   "devDependencies": {
