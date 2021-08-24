@@ -134,6 +134,8 @@ let processColumnsToUpdate = str => {
 program
   .version("0.0.1")
   .usage("[options] <file> <table>")
+  .argument('<file>', 'File to parse')
+  .argument('<table>', 'Table name')
   .option("-e|--example", "Show example data")
   .option(
     "-m|--method <method>",
@@ -143,7 +145,9 @@ program
   .option("-w|--where <column>", "Column for where")
   .option("-f|--filter <column>", "Column to apply a filter for")
   .action(parseFunction);
+  
 program.parse(process.argv); // end with parse to parse through the input
+
 
 // if program was called with no arguments, show help.
 if (program.args.length === 0) program.help();
